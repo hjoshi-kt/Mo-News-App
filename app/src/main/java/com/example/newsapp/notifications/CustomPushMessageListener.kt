@@ -1,10 +1,9 @@
 package com.example.newsapp.notifications
 
 import android.content.Context
-import android.util.Log
+import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import com.example.newsapp.R
-import com.example.newsapp.util.Utils
 import com.moengage.pushbase.model.NotificationPayload
 import com.moengage.pushbase.push.PushMessageListener
 
@@ -24,5 +23,12 @@ class CustomPushMessageListener : PushMessageListener() {
         } else {
             return super.onCreateNotification(context, notificationPayload)
         }
+    }
+
+    override fun isNotificationRequired(context: Context, payload: Bundle): Boolean {
+        var show = "true"
+        payload.getString("show")?.let { show = it }
+        super.isNotificationRequired(context, payload)
+        return show.toBoolean()
     }
 }
