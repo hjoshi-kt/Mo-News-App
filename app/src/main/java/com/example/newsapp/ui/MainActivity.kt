@@ -27,6 +27,7 @@ import com.example.newsapp.models.Articles
 import com.example.newsapp.network.NewsApiRepository
 import com.example.newsapp.network.NewsApiViewModel
 import com.example.newsapp.network.NewsApiViewModelFactory
+import com.example.newsapp.notifications.CustomPushMessageListener
 import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.grey)))
         sharedPreferences = getSharedPreferences(Utils.MO_APP_VERSION_PREF_KEY, MODE_PRIVATE)
         MoEPushHelper.getInstance().requestPushPermission(this)
+        MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
         trackApplicationStatus()
 
         lifecycleScope.launch {

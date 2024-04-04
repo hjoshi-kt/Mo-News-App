@@ -21,7 +21,6 @@ class MyApplication : Application() {
         val moEngage = MoEngage.Builder(this, Utils.MOENGAGE_APP_ID, DataCenter.DATA_CENTER_1)
             .configureLogs(LogConfig(LogLevel.VERBOSE, true))
             .configureNotificationMetaData(NotificationConfig(R.drawable.location, R.drawable.location))
-            .configureFcm(FcmConfig(false))
             .build()
         MoEngage.initialiseDefaultInstance(moEngage)
         MoEAnalyticsHelper.setUniqueId(this, "mo-joshi")
