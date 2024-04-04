@@ -1,8 +1,11 @@
 package com.example.newsapp.notifications
 
 import android.util.Log
+import com.example.newsapp.util.Utils
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.moengage.firebase.MoEFireBaseHelper
+import com.moengage.pushbase.MoEPushHelper
 
 /**
  * Service class for handling Firebase Cloud Messaging (FCM) notifications.
@@ -18,7 +21,9 @@ class FCMNotificationService : FirebaseMessagingService() {
      */
 
     override fun onNewToken(token: String) {
-        Log.d("device token", token)
+        Log.d(Utils.NEWS_APP_LOG, "device token")
+        Log.d(Utils.NEWS_APP_LOG, token)
+        MoEFireBaseHelper.getInstance().passPushToken(applicationContext,token)
         super.onNewToken(token)
     }
 
@@ -29,8 +34,13 @@ class FCMNotificationService : FirebaseMessagingService() {
      */
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Log.d("message received", message.data.toString())
+        Log.d(Utils.NEWS_APP_LOG,"message received")
+        Log.d(Utils.NEWS_APP_LOG, message.data.toString())
         // Build and display a notification based on the received FCM message
-        NotificationService.notificationBuilder(this, message.notification?.title?:"", message.notification?.body?:"")
+        if (MoEPushHelper.getInstance().isFromMoEngagePlatform(message.data)) {
+            MoEFireBaseHelper.getInstance().passPushPayload(applicationContext, message.data)
+        } else {
+            NotificationService.notificationBuilder(this, message.notification?.title?:"", message.notification?.body?:"")
+        }
     }
 }
