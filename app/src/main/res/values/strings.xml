@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">News App</string>
+    <string name="sort_by">Sort By</string>
+    <string name="search_hint">Search trending topics .. </string>
+    <string name="no_articles_found">No articles found</string>
+
+    <string-array name="filters">
+        <item>New to Old</item>
+        <item>Old to New</item>
+    </string-array>
+    
+</resources>
