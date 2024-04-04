@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.newsapp.R
+import com.example.newsapp.util.Utils
 import com.moengage.pushbase.model.NotificationPayload
 import com.moengage.pushbase.push.PushMessageListener
 
@@ -44,5 +46,11 @@ class CustomPushMessageListener : PushMessageListener() {
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")))
         }
         return false
+    }
+
+    override fun handleCustomAction(context: Context, payload: String) {
+        Log.d(Utils.NEWS_APP_LOG, "custom action")
+        Log.d(Utils.NEWS_APP_LOG, payload)
+        super.handleCustomAction(context, payload)
     }
 }
