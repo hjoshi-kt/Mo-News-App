@@ -1,6 +1,9 @@
 package com.example.newsapp.notifications
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import com.example.newsapp.R
@@ -30,5 +33,16 @@ class CustomPushMessageListener : PushMessageListener() {
         payload.getString("show")?.let { show = it }
         super.isNotificationRequired(context, payload)
         return show.toBoolean()
+    }
+
+    override fun onNotificationClick(activity: Activity, payload: Bundle): Boolean {
+        var url = "github"
+        payload.getString("url")?.let { url = it }
+        if (url == "github") {
+            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.github.com")))
+        } else {
+            activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com")))
+        }
+        return false
     }
 }
