@@ -11,6 +11,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("moengage") {
+            from("com.moengage:android-dependency-catalog:4.1.2")
+        }
+    }
 }
 
 rootProject.name = "News App"

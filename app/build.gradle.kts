@@ -59,4 +59,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation(moengage.core)
+    implementation("androidx.lifecycle:lifecycle-process:2.7.0")
+    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
 }
