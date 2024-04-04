@@ -21,6 +21,7 @@ class Utils {
         const val NOTIFICATION_REQUEST_CODE = 0
         const val NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL"
         const val NOTIFICATION_CHANNEL_NAME = "NEWS_NOTIFICATION"
+        const val MOENGAGE_APP_ID = "48VL1XKY8O8FKT6MO00XGEWA_DEBUG"
 
         /**
          * Formats the given time string into a human-readable format.
