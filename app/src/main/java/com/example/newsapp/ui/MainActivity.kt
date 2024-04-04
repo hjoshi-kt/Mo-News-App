@@ -31,6 +31,7 @@ import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
+import com.moengage.pushbase.MoEPushHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         binding.dropdown.visibility = View.GONE
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.grey)))
         sharedPreferences = getSharedPreferences(Utils.MO_APP_VERSION_PREF_KEY, MODE_PRIVATE)
+        MoEPushHelper.getInstance().requestPushPermission(this)
         trackApplicationStatus()
 
         lifecycleScope.launch {
