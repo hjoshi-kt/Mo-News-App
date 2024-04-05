@@ -317,6 +317,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
      */
 
     override fun onItemClick(position: Int, articles: List<Articles>) {
+//        val url = articles[position].url
+//        val intent = Intent(Intent.ACTION_VIEW)
+//        intent.setData(Uri.parse(url))
         val intent = Intent(this, InboxActivity::class.java)
         startActivity(intent)
     }
