@@ -6,4 +6,18 @@
     </style>
 
     <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
+
+<!--    <style name="MoEInboxTheme.NoActionBar">-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="colorPrimary">@color/dark_blue</item>-->
+<!--        <item name="colorPrimaryDark">@color/grey</item>-->
+<!--        <item name="colorControlNormal">@color/light_grey</item>-->
+<!--        <item name="android:background">@color/light_pink</item>-->
+<!--    </style>-->
+
+<!--    <style name="MoETheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+
+<!--    <style name="MoETheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>-->
+
 </resources>

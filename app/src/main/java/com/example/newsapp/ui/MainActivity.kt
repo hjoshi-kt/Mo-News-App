@@ -32,9 +32,17 @@ import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
+import com.moengage.inbox.core.MoEInboxHelper
+import com.moengage.inbox.core.listener.OnMessagesAvailableListener
+import com.moengage.inbox.core.model.InboxData
+import com.moengage.inbox.ui.MoEInboxUiHelper
+import com.moengage.inbox.ui.view.InboxActivity
 import com.moengage.pushbase.MoEPushHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
@@ -316,9 +324,24 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
      */
 
     override fun onItemClick(position: Int, articles: List<Articles>) {
-        val url = articles[position].url
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.setData(Uri.parse(url))
-        startActivity(intent)
+//        MoEInboxUiHelper.getInstance().setInboxAdapter(NotificationCenterAdapter())
+//        val intent = Intent(this, InboxActivity::class.java)
+//        startActivity(intent)
+//        lifecycleScope.launch {
+//            try {
+//                withContext(Dispatchers.IO) {
+//                    MoEInboxHelper.getInstance().fetchAllMessages(this@MainActivity)
+//                }
+                val intent = Intent(this, NotificationCenterActivity::class.java)
+                startActivity(intent)
+//            } catch (e: Exception) {
+//                // Handle the exception, for instance by showing an error message to the user
+//            }
+//        }
+
+//        MoEInboxHelper.getInstance().fetchAllMessagesAsync(applicationContext) {
+//            val intent = Intent(this@MainActivity, InboxActivity::class.java)
+//                startActivity(intent)
+//        }
     }
 }
