@@ -38,6 +38,6 @@ class NotificationCenterActivity : AppCompatActivity(), Listeners {
     }
 
     override fun onMessageClick(messages: MutableList<InboxMessage>, position: Int) {
-        Log.d(Utils.NEWS_APP_LOG,messages[position].toString())
+        MoEInboxHelper.getInstance().trackMessageClicked(this, messages[position])
     }
 }
