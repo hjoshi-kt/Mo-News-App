@@ -1,11 +1,13 @@
 package com.example.newsapp.ui
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +24,7 @@ import androidx.datastore.preferences.createDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.newsapp.R
+import com.example.newsapp.application.MyApplication
 import com.example.newsapp.databinding.ActivityMainBinding
 import com.example.newsapp.models.Articles
 import com.example.newsapp.network.NewsApiRepository
@@ -29,6 +32,8 @@ import com.example.newsapp.network.NewsApiViewModel
 import com.example.newsapp.network.NewsApiViewModelFactory
 import com.example.newsapp.notifications.CustomPushMessageListener
 import com.example.newsapp.ui.adapters.NewsAdapter
+import com.example.newsapp.ui.fragments.ClickListener
+import com.example.newsapp.ui.fragments.ExampleDialog
 import com.example.newsapp.ui.fragments.FifthFragment
 import com.example.newsapp.ui.fragments.FirstFragment
 import com.example.newsapp.ui.fragments.FourthFragment
@@ -39,13 +44,15 @@ import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
 import com.moengage.inapp.MoEInAppHelper
+import com.moengage.inapp.listeners.SelfHandledAvailableListener
+import com.moengage.inapp.model.SelfHandledCampaignData
 import com.moengage.pushbase.MoEPushHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener, SelfHandledAvailableListener {
 
     private lateinit var binding: ActivityMainBinding
     private val repository = NewsApiRepository()
@@ -79,6 +86,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         MoEPushHelper.getInstance().requestPushPermission(this)
         MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
         trackApplicationStatus()
+        MoEInAppHelper.getInstance().getSelfHandledInApp(this, this)
         replaceFragment(FirstFragment())
         MoEInAppHelper.getInstance().showInApp(this)
         binding.button.setOnClickListener{
@@ -360,5 +368,27 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
 //            val intent = Intent(this@MainActivity, InboxActivity::class.java)
 //                startActivity(intent)
 //        }
+    }
+
+    override fun onSelfHandledAvailable(data: SelfHandledCampaignData?) {
+        Log.d(Utils.NEWS_APP_LOG,data.toString())
+        if (data?.campaign != null){
+            openDialog(data)
+            MoEInAppHelper.getInstance().selfHandledShown(this, data)
+        }
+    }
+
+    private fun openDialog(data : SelfHandledCampaignData) {
+        ExampleDialog(supportFragmentManager, data.campaign.payload, this, object : ClickListener {
+            override fun OnDismissListener(context: Context) {
+                Log.d(Utils.NEWS_APP_LOG,"In App dismissed")
+                MoEInAppHelper.getInstance().selfHandledDismissed(context, data)
+            }
+
+            override fun OnClickListener(context: Context) {
+                Log.d(Utils.NEWS_APP_LOG,"In App clicked")
+                MoEInAppHelper.getInstance().selfHandledClicked(context, data)
+            }
+        })
     }
 }
