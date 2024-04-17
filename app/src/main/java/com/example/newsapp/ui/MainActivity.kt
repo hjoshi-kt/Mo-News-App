@@ -84,7 +84,15 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.grey)))
         sharedPreferences = getSharedPreferences(Utils.MO_APP_VERSION_PREF_KEY, MODE_PRIVATE)
         MoEPushHelper.getInstance().requestPushPermission(this)
-        MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
+//        MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
+
+        (application as MyApplication).onEventOccurred = { data ->
+            // Handle event here
+            Log.d(Utils.NEWS_APP_LOG, "Event occurred with data: $data")
+            openDialog(data)
+            MoEInAppHelper.getInstance().selfHandledShown(this, data)
+        }
+
         trackApplicationStatus()
         MoEInAppHelper.getInstance().getSelfHandledInApp(this, this)
         replaceFragment(FirstFragment())

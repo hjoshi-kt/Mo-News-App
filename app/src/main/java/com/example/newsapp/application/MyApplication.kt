@@ -1,6 +1,7 @@
 package com.example.newsapp.application
 
 import android.app.Application
+import android.util.Log
 import com.example.newsapp.R
 import com.example.newsapp.util.Utils
 import com.moengage.core.DataCenter
@@ -12,6 +13,8 @@ import com.moengage.core.config.LogConfig
 import com.moengage.core.config.NotificationConfig
 import com.moengage.core.enableAdIdTracking
 import com.moengage.core.model.UserGender
+import com.moengage.inapp.MoEInAppHelper
+import com.moengage.inapp.model.SelfHandledCampaignData
 import java.util.Date
 
 class MyApplication : Application() {
@@ -33,5 +36,17 @@ class MyApplication : Application() {
         MoEAnalyticsHelper.setEmailId(this,"himanshu.joshi@moengage.com")
         MoEAnalyticsHelper.setUserAttribute(this,"locality", "Uttarakhand")
         enableAdIdTracking(this)
+        MoEInAppHelper.getInstance().setSelfHandledListener {
+            Log.d(Utils.NEWS_APP_LOG,"event triggered self handled")
+            if (it != null) {
+                triggerEvent(it)
+            }
+        }
+    }
+
+    var onEventOccurred: ((SelfHandledCampaignData) -> Unit)? = null
+
+    fun triggerEvent(data: SelfHandledCampaignData) {
+        onEventOccurred?.invoke(data)
     }
 }
