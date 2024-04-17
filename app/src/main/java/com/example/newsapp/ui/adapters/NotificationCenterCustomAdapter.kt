@@ -1,11 +1,10 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.databinding.MoNotificationCenterItemBinding
-import com.moengage.inbox.core.MoEInboxHelper
 import com.moengage.inbox.core.model.InboxMessage
 
 class NotificationCenterCustomAdapter(val messages : MutableList<InboxMessage>, val context : Context, val listener : Listeners) : RecyclerView.Adapter<NotificationCenterCustomAdapter.NotificationCenterCustomViewHolder>() {

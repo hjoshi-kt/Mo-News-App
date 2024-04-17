@@ -1,4 +1,4 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.adapters
 
 import android.content.Context
 import android.text.TextUtils

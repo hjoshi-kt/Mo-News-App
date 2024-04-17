@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
@@ -28,21 +27,14 @@ import com.example.newsapp.network.NewsApiRepository
 import com.example.newsapp.network.NewsApiViewModel
 import com.example.newsapp.network.NewsApiViewModelFactory
 import com.example.newsapp.notifications.CustomPushMessageListener
+import com.example.newsapp.ui.adapters.NewsAdapter
 import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
-import com.moengage.inbox.core.MoEInboxHelper
-import com.moengage.inbox.core.listener.OnMessagesAvailableListener
-import com.moengage.inbox.core.model.InboxData
-import com.moengage.inbox.ui.MoEInboxUiHelper
-import com.moengage.inbox.ui.view.InboxActivity
 import com.moengage.pushbase.MoEPushHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
