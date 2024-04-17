@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         MoEInAppHelper.getInstance().getSelfHandledInApp(this, this)
         replaceFragment(FirstFragment())
         MoEInAppHelper.getInstance().showInApp(this)
+        MoEInAppHelper.getInstance().showNudge(this)
         binding.button.setOnClickListener{
             val fragment = supportFragmentManager.fragments.last()
             when (fragment::class.java) {
