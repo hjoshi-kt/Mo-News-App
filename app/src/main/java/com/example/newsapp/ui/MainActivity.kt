@@ -32,6 +32,7 @@ import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
+import com.moengage.inapp.MoEInAppHelper
 import com.moengage.pushbase.MoEPushHelper
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         MoEPushHelper.getInstance().requestPushPermission(this)
         MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
         trackApplicationStatus()
+        MoEInAppHelper.getInstance().showInApp(this)
 
         lifecycleScope.launch {
             var value = readDataStore(Utils.SORT_BY) // coroutine scope to get the default selection of user from local db

@@ -64,4 +64,7 @@ dependencies {
     implementation(moengage.inboxCore)
     implementation("androidx.lifecycle:lifecycle-process:2.7.0")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
+    implementation(moengage.inapp)
+    implementation("com.github.bumptech.glide:glide:4.9.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.9.0")
 }
