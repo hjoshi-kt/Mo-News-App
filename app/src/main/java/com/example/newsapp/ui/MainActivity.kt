@@ -19,6 +19,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityMainBinding
@@ -28,6 +29,11 @@ import com.example.newsapp.network.NewsApiViewModel
 import com.example.newsapp.network.NewsApiViewModelFactory
 import com.example.newsapp.notifications.CustomPushMessageListener
 import com.example.newsapp.ui.adapters.NewsAdapter
+import com.example.newsapp.ui.fragments.FifthFragment
+import com.example.newsapp.ui.fragments.FirstFragment
+import com.example.newsapp.ui.fragments.FourthFragment
+import com.example.newsapp.ui.fragments.SecondFragment
+import com.example.newsapp.ui.fragments.ThirdFragment
 import com.example.newsapp.util.Utils
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
@@ -73,7 +79,18 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         MoEPushHelper.getInstance().requestPushPermission(this)
         MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
         trackApplicationStatus()
+        replaceFragment(FirstFragment())
         MoEInAppHelper.getInstance().showInApp(this)
+        binding.button.setOnClickListener{
+            val fragment = supportFragmentManager.fragments.last()
+            when (fragment::class.java) {
+                FirstFragment::class.java -> replaceFragment(SecondFragment())
+                SecondFragment::class.java -> replaceFragment(ThirdFragment())
+                ThirdFragment::class.java -> replaceFragment(FourthFragment())
+                FourthFragment::class.java -> replaceFragment(FifthFragment())
+                else -> replaceFragment(FirstFragment())
+            }
+        }
 
         lifecycleScope.launch {
             var value = readDataStore(Utils.SORT_BY) // coroutine scope to get the default selection of user from local db
@@ -117,6 +134,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
                 }
             }
         }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(binding.fragmentContainerNews.id,fragment)
+        transaction.commit()
     }
 
     private fun trackApplicationStatus() {
