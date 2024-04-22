@@ -82,3 +82,5 @@ class Utils {
 
 
 }
+
+data class InApp(val isDialog : Boolean, val title : String, val message : String, val imageLink : String)

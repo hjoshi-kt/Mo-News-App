@@ -33,12 +33,13 @@ class NotificationCenterActivity : AppCompatActivity(), Listeners {
     }
 
     override fun onMessageDelete(messages: MutableList<InboxMessage>, position: Int) {
-        MoEInboxHelper.getInstance().deleteMessage(this, messages[position])
         messages.removeAt(position)
         adapter.notifyItemRemoved(position)
+        adapter.notifyItemRangeChanged(position, messages.size)
     }
 
     override fun onMessageClick(messages: MutableList<InboxMessage>, position: Int) {
         Log.d(Utils.NEWS_APP_LOG,messages[position].toString())
+        MoEInboxHelper.getInstance().trackMessageClicked(this, messages[position])
     }
 }

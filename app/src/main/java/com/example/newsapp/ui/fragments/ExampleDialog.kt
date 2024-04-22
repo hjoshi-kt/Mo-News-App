@@ -6,22 +6,29 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu.OnDismissListener
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.example.newsapp.R
+import com.example.newsapp.util.InApp
 import com.example.newsapp.util.Utils
 
-class ExampleDialog(private val fragmentManager: FragmentManager, val text : String, private val context: Context, private val listener: ClickListener) : DialogFragment() {
+class ExampleDialog(private val fragmentManager: FragmentManager, val inApp: InApp, private val context: Context, private val listener: ClickListener) : DialogFragment() {
 
     init {
         this.show(fragmentManager, TAG)
     }
 
     private lateinit var toolbar: Toolbar
-    private lateinit var textView: TextView
+    private lateinit var title: TextView
+    private lateinit var message: TextView
+    private lateinit var imageView: ImageView
+    private lateinit var messageLayout: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_FullScreenDialog)
@@ -45,7 +52,10 @@ class ExampleDialog(private val fragmentManager: FragmentManager, val text : Str
         super.onCreateView(inflater, container, savedInstanceState)
         val view = inflater.inflate(R.layout.example_dialog, container, false)
         toolbar = view.findViewById(R.id.toolbar)
-        textView = view.findViewById(R.id.textdialog)
+        title = view.findViewById(R.id.title)
+        message = view.findViewById(R.id.message)
+        imageView = view.findViewById(R.id.myImage)
+        messageLayout = view.findViewById(R.id.messageLayout)
         return view
     }
 
@@ -56,8 +66,13 @@ class ExampleDialog(private val fragmentManager: FragmentManager, val text : Str
             dismiss()
         }
         toolbar.title = "In App"
-        textView.text = text
-        textView.setOnClickListener{
+        title.text = inApp.title
+        message.text = inApp.message
+        Glide.with(this)
+            .load(inApp.imageLink)
+            .placeholder(R.drawable.baseline_downloading_24)
+            .into(imageView)
+        messageLayout.setOnClickListener{
             listener.OnClickListener(context)
         }
     }
