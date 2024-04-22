@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -39,12 +40,18 @@ import com.example.newsapp.ui.fragments.FirstFragment
 import com.example.newsapp.ui.fragments.FourthFragment
 import com.example.newsapp.ui.fragments.SecondFragment
 import com.example.newsapp.ui.fragments.ThirdFragment
+import com.example.newsapp.util.InApp
 import com.example.newsapp.util.Utils
+import com.google.gson.Gson
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
 import com.moengage.inapp.MoEInAppHelper
+import com.moengage.inapp.listeners.InAppLifeCycleListener
+import com.moengage.inapp.listeners.OnClickActionListener
 import com.moengage.inapp.listeners.SelfHandledAvailableListener
+import com.moengage.inapp.model.ClickData
+import com.moengage.inapp.model.InAppData
 import com.moengage.inapp.model.SelfHandledCampaignData
 import com.moengage.pushbase.MoEPushHelper
 import kotlinx.coroutines.flow.first
@@ -52,7 +59,8 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener, SelfHandledAvailableListener {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener, SelfHandledAvailableListener,
+    InAppLifeCycleListener, OnClickActionListener {
 
     private lateinit var binding: ActivityMainBinding
     private val repository = NewsApiRepository()
@@ -84,12 +92,30 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.grey)))
         sharedPreferences = getSharedPreferences(Utils.MO_APP_VERSION_PREF_KEY, MODE_PRIVATE)
         MoEPushHelper.getInstance().requestPushPermission(this)
+
+//        ExampleDialog(supportFragmentManager, "hjebrfbher", this, object : ClickListener {
+//            override fun OnDismissListener(context: Context) {
+//                Log.d(Utils.NEWS_APP_LOG,"In App dismissed")
+////                MoEInAppHelper.getInstance().selfHandledDismissed(context, data)
+//            }
+//
+//            override fun OnClickListener(context: Context) {
+//                Log.d(Utils.NEWS_APP_LOG,"In App clicked")
+////                MoEInAppHelper.getInstance().selfHandledClicked(context, data)
+//            }
+//        })
+
 //        MoEPushHelper.getInstance().registerMessageListener(CustomPushMessageListener())
 
         (application as MyApplication).onEventOccurred = { data ->
             // Handle event here
             Log.d(Utils.NEWS_APP_LOG, "Event occurred with data: $data")
-            openDialog(data)
+            val inApp = Gson().fromJson(data.campaign.payload, InApp::class.java)
+            if (inApp.isDialog) {
+                openDialog(data, inApp)
+            } else {
+                Toast.makeText(this, "this is a toast", Toast.LENGTH_SHORT).show()
+            }
             MoEInAppHelper.getInstance().selfHandledShown(this, data)
         }
 
@@ -98,6 +124,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         replaceFragment(FirstFragment())
         MoEInAppHelper.getInstance().showInApp(this)
         MoEInAppHelper.getInstance().showNudge(this)
+        MoEInAppHelper.getInstance().addInAppLifeCycleListener(this)
+        MoEInAppHelper.getInstance().setClickActionListener(this)
         binding.button.setOnClickListener{
             val fragment = supportFragmentManager.fragments.last()
             when (fragment::class.java) {
@@ -382,13 +410,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
     override fun onSelfHandledAvailable(data: SelfHandledCampaignData?) {
         Log.d(Utils.NEWS_APP_LOG,data.toString())
         if (data?.campaign != null){
-            openDialog(data)
+            val inApp = Gson().fromJson(data.campaign.payload, InApp::class.java)
+            openDialog(data, inApp)
             MoEInAppHelper.getInstance().selfHandledShown(this, data)
         }
     }
 
-    private fun openDialog(data : SelfHandledCampaignData) {
-        ExampleDialog(supportFragmentManager, data.campaign.payload, this, object : ClickListener {
+    private fun openDialog(data : SelfHandledCampaignData, inApp: InApp) {
+        ExampleDialog(supportFragmentManager, inApp, this, object : ClickListener {
             override fun OnDismissListener(context: Context) {
                 Log.d(Utils.NEWS_APP_LOG,"In App dismissed")
                 MoEInAppHelper.getInstance().selfHandledDismissed(context, data)
@@ -399,5 +428,18 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
                 MoEInAppHelper.getInstance().selfHandledClicked(context, data)
             }
         })
+    }
+
+    override fun onDismiss(inAppData: InAppData) {
+        Log.d(Utils.NEWS_APP_LOG, "in app dismissed")
+    }
+
+    override fun onShown(inAppData: InAppData) {
+        Log.d(Utils.NEWS_APP_LOG, "in app shown")
+    }
+
+    override fun onClick(clickData: ClickData): Boolean {
+        Log.d(Utils.NEWS_APP_LOG, "in app clicked")
+        return false
     }
 }
