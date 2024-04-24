@@ -8,5 +8,11 @@
         <item>New to Old</item>
         <item>Old to New</item>
     </string-array>
-    
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment</string>
+    <string name="hello_third_fragment">Hello third fragment</string>
+    <string name="hello_fourth_fragment">Hello fourth fragment</string>
+    <string name="hello_fifth_fragment">Hello fifth fragment</string>
+
 </resources>

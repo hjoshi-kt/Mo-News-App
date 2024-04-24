@@ -4,8 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityNotificationCenterBinding
+import com.example.newsapp.ui.adapters.Listeners
+import com.example.newsapp.ui.adapters.NotificationCenterCustomAdapter
 import com.example.newsapp.util.Utils
 import com.moengage.inbox.core.MoEInboxHelper
 import com.moengage.inbox.core.model.InboxMessage
@@ -32,12 +33,13 @@ class NotificationCenterActivity : AppCompatActivity(), Listeners {
     }
 
     override fun onMessageDelete(messages: MutableList<InboxMessage>, position: Int) {
-        MoEInboxHelper.getInstance().deleteMessage(this, messages[position])
         messages.removeAt(position)
         adapter.notifyItemRemoved(position)
+        adapter.notifyItemRangeChanged(position, messages.size)
     }
 
     override fun onMessageClick(messages: MutableList<InboxMessage>, position: Int) {
         Log.d(Utils.NEWS_APP_LOG,messages[position].toString())
+        MoEInboxHelper.getInstance().trackMessageClicked(this, messages[position])
     }
 }

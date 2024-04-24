@@ -1,18 +1,8 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.adapters
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.example.newsapp.databinding.MoNotificationCenterItemBinding
-import com.example.newsapp.databinding.NewsSingleItemBinding
-import com.example.newsapp.models.Articles
-import com.example.newsapp.util.Utils
-import com.moengage.core.internal.utils.accountMetaForInstance
-import com.moengage.inbox.core.MoEInboxHelper
 import com.moengage.inbox.core.model.InboxMessage
 import com.moengage.inbox.ui.MoEInboxUiHelper
 import com.moengage.inbox.ui.adapter.InboxAdapter
