@@ -43,6 +43,13 @@ import com.example.newsapp.ui.fragments.ThirdFragment
 import com.example.newsapp.util.InApp
 import com.example.newsapp.util.Utils
 import com.google.gson.Gson
+import com.moengage.cards.core.MoECardHelper
+import com.moengage.cards.core.listener.SyncCompleteListener
+import com.moengage.cards.core.model.SyncCompleteData
+import com.moengage.cards.ui.CardActivity
+import com.moengage.cards.ui.CardFragment
+import com.moengage.cards.ui.MoECardUiHelper
+import com.moengage.cards.ui.listener.OnCardClickListener
 import com.moengage.core.Properties
 import com.moengage.core.analytics.MoEAnalyticsHelper
 import com.moengage.core.model.AppStatus
@@ -59,8 +66,9 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 
-class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener, SelfHandledAvailableListener,
-    InAppLifeCycleListener, OnClickActionListener {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsAdapter.OnItemClickListener,
+    SelfHandledAvailableListener,
+    InAppLifeCycleListener, OnClickActionListener, SyncCompleteListener, OnCardClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private val repository = NewsApiRepository()
@@ -92,6 +100,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.grey)))
         sharedPreferences = getSharedPreferences(Utils.MO_APP_VERSION_PREF_KEY, MODE_PRIVATE)
         MoEPushHelper.getInstance().requestPushPermission(this)
+        MoECardHelper.setSyncCompleteListener(this)
+        MoECardUiHelper.setClickListener(this)
 
 //        ExampleDialog(supportFragmentManager, "hjebrfbher", this, object : ClickListener {
 //            override fun OnDismissListener(context: Context) {
@@ -121,7 +131,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
 
         trackApplicationStatus()
         MoEInAppHelper.getInstance().getSelfHandledInApp(this, this)
-        replaceFragment(FirstFragment())
+//        replaceFragment(FirstFragment())
+        replaceFragment(CardFragment())
         MoEInAppHelper.getInstance().showInApp(this)
         MoEInAppHelper.getInstance().showNudge(this)
         MoEInAppHelper.getInstance().addInAppLifeCycleListener(this)
@@ -394,7 +405,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
 //                withContext(Dispatchers.IO) {
 //                    MoEInboxHelper.getInstance().fetchAllMessages(this@MainActivity)
 //                }
-                val intent = Intent(this, NotificationCenterActivity::class.java)
+                val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
 //            } catch (e: Exception) {
 //                // Handle the exception, for instance by showing an error message to the user
@@ -440,6 +451,24 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemClickListener, NewsA
 
     override fun onClick(clickData: ClickData): Boolean {
         Log.d(Utils.NEWS_APP_LOG, "in app clicked")
+        return false
+    }
+
+    override fun onSyncComplete(data: SyncCompleteData?) {
+
+        Log.d(Utils.NEWS_APP_LOG, "Sync completed for cards : " + data.toString())
+
+        MoECardHelper.getNewCardCountAsync(this){
+            Log.d(Utils.NEWS_APP_LOG, "New Card Count Data : " + it.toString())
+        }
+
+        MoECardHelper.getUnClickedCardCountAsync(this){
+            Log.d(Utils.NEWS_APP_LOG, "Unclicked Card Count Data : " + it.toString())
+        }
+    }
+
+    override fun onCardClick(clickData: com.moengage.cards.ui.model.ClickData): Boolean {
+        Log.d(Utils.NEWS_APP_LOG, "Card clicked data : $clickData")
         return false
     }
 }
